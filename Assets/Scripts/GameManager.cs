@@ -21,15 +21,21 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TMP_Text pixlClickPowerText;
     [SerializeField] private TMP_Text pixlPerSecondText;
     [SerializeField] private Image pixlImage;
-    [SerializeField] private GameObject shop;
-    [SerializeField] private Scrollbar scrollBar;
+    [SerializeField] private GameObject clickShop;
+    [SerializeField] private GameObject productionShop;
+    [SerializeField] private Scrollbar clickScrollBar;
+    [SerializeField] private Scrollbar productionScrollBar;
 
+
+    private const string dataFileName = "Pixl_Clickr";
     void Start()
     {
-        data = new Data();
-        data.pixlAmount = 1;
+        data = SaveSystem.SaveExists(dataFileName) 
+            ? SaveSystem.LoadData<Data>(dataFileName) : new Data();
         UpgradeManager.instance.StartUpdateManager();
     }
+
+    public float SaveTime;
 
     void Update()
     {
@@ -37,6 +43,13 @@ public class GameManager : MonoBehaviour
         pixlAmountText.text = $"{data.pixlAmount:F0} Pixl!";
         pixlClickPowerText.text = "+" + ClickPower() + " Pixl";
         pixlPerSecondText.text = $"{PixlPerSecond():F0} per sec";
+
+        SaveTime += Time.deltaTime * (1 / Time.timeScale);
+        if(SaveTime >= 3)
+        {
+            SaveSystem.SaveData(data, dataFileName);
+            SaveTime = 0;
+        }
 
     }
 
@@ -70,17 +83,31 @@ public class GameManager : MonoBehaviour
         data.pixlAmount += ClickPower();
     }
 
-    public void ShopController()
+    public void ClickShopController()
     {
-        if(shop.activeSelf)
+        if(clickShop.activeSelf)
         {
-            shop.SetActive(false);
+            clickShop.SetActive(false);
         } 
 
         else
         {
-            shop.SetActive(true);
-            scrollBar.value = 1;
+            clickShop.SetActive(true);
+            clickScrollBar.value = 1;
+        }
+    }
+
+    public void ProductionShopController()
+    {
+        if(productionShop.activeSelf)
+        {
+            productionShop.SetActive(false);
+        } 
+
+        else
+        {
+            productionShop.SetActive(true);
+            productionScrollBar.value = 1;
         }
     }
 }
