@@ -167,7 +167,7 @@ GameObject:
   - component: {fileID: 5409556389412851021}
   - component: {fileID: 5409556389412851016}
   m_Layer: 5
-  m_Name: ProductionUpgrade
+  m_Name: ClickUpgradeNew
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -282,7 +282,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 5409556389412851016}
         m_TargetAssemblyTypeName: Upgrades, Assembly-CSharp
-        m_MethodName: BuyProductionUpgrade
+        m_MethodName: BuyClickUpgrade
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -844,7 +844,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 144.17595, w: 36.13617}
+  m_margin: {x: 0, y: 0, z: 117.65625, w: 36.13617}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0

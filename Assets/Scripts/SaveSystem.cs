@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
-using File = UnityEngine.Windows.File;
+//using File = UnityEngine.Windows.File;
+
 
 public class SaveSystem : MonoBehaviour
 {
@@ -79,6 +80,6 @@ public class SaveSystem : MonoBehaviour
     }
 
     public static bool SaveExists(string fileName) =>
-        File.Exists(SavePath + fileName + FileType)
-                || File.Exists(BackUpSavePath + fileName + FileType);
+        System.IO.File.Exists(SavePath + fileName + FileType)
+                || System.IO.File.Exists(BackUpSavePath + fileName + FileType);
 }

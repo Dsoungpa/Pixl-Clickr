@@ -10,11 +10,11 @@ public class UpgradeManager : MonoBehaviour
     public static UpgradeManager instance;
     private void Awake() => instance = this;
 
-    public List<Upgrades> clickUpgrades;
-    public Upgrades clickUpgradePrefab;
-
+    public List<Upgrades> specialUpgrades;
     public List<Upgrades> productionUpgrades;
     public Upgrades productionUpgradePrefab;
+    public Upgrades clickUpgradePrefab;
+    public GameObject ppsItemsPrefab;
 
     public ScrollRect clickUpgradesScroll;
     public Transform clickUpgradesPanel;
@@ -24,6 +24,9 @@ public class UpgradeManager : MonoBehaviour
 
     public string[] clickUpgradeNames;
     public string[] productionUpgradeNames;
+    public string[] clickUpgradePerks;
+    public string[] productionUpgradePerks;
+    
 
     public BigDouble[] clickUpgradesBaseCost;
     public BigDouble[] clickUpgradesCostMult;
@@ -35,24 +38,28 @@ public class UpgradeManager : MonoBehaviour
 
     public void StartUpdateManager()
     {
-        Methods.UpgradeCheck(GameManager.instance.data.clickUpgradeLevel, 3);
+        //Methods.UpgradeCheck(GameManager.instance.data.clickUpgradeLevel, 2);
 
-        clickUpgradeNames = new []{"Click Power + 1", "Click Power +5", "Click Power +10", "Click Power +25"};
-        clickUpgradesBaseCost = new BigDouble[] {10, 50, 100, 1000};
-        clickUpgradesCostMult = new BigDouble[] {1.25, 1.35, 1.55, 2};
-        clickUpgradesBasePower = new BigDouble[] {1, 5, 10, 25};
+        clickUpgradeNames = new []{"Offline Progress", "Power Click"};
+        clickUpgradePerks = new []{"+5%", "2x Per Click"};
+        clickUpgradesBaseCost = new BigDouble[] {10000, 5};
+        clickUpgradesCostMult = new BigDouble[] {2.5, 2.5};
+        clickUpgradesBasePower = new BigDouble[] {5, 2};
         
-        productionUpgradeNames = new []{"+1 Pixl/s", "+2 Pixl/s", "+10 Pixl/s", "+100 Pixl/s"};
-        productionUpgradesBaseCost = new BigDouble[] {25, 100, 1000, 10000};
-        productionUpgradesCostMult = new BigDouble[] {1.5, 1.75, 2, 3};
-        productionUpgradesBasePower = new BigDouble[] {1, 2, 10, 100};
+        productionUpgradeNames = new []{"Sappy Seal", "Bronze Goat", "Pixl Pet", "Silver Goat", "Gold Goat", "Egg Incubator", "Pixel Palace", "Diety Pet", "1 of 1"};
+        productionUpgradePerks = new []{"PPS   +0.1", "PPS   +0.3", "PPS   +1", "PPS   +3", "PPS   +6", "PPS   +20", "PPS   +40", "PPS   +70", "PPS   +300"};
+        productionUpgradesBaseCost = new BigDouble[] {3, 100, 1000, 10000, 50000, 200000, 500000, 1000000, 5000000};
+        //productionUpgradesCostMult = new BigDouble[] {1.5, 1.75, 2, 3};
+        productionUpgradesBasePower = new BigDouble[] {0.1, 0.3, 1, 3, 6, 20, 40, 70, 300};
 
         for(int i = 0; i < GameManager.instance.data.clickUpgradeLevel.Count; i++)
         {
-            Upgrades upgrade = Instantiate(clickUpgradePrefab, clickUpgradesPanel);
+            Upgrades upgrade = Instantiate(clickUpgradePrefab, productionUpgradesPanel);
             upgrade.UpgradeID = i; 
-            clickUpgrades.Add(upgrade);
+            specialUpgrades.Add(upgrade);
         }
+
+        Instantiate(ppsItemsPrefab, productionUpgradesPanel);
 
         for(int i = 0; i < GameManager.instance.data.productionUpgradeLevel.Count; i++)
         {
@@ -61,7 +68,7 @@ public class UpgradeManager : MonoBehaviour
             productionUpgrades.Add(upgrade);
         }
 
-        clickUpgradesScroll.normalizedPosition = new Vector2(0,0);
+        //clickUpgradesScroll.normalizedPosition = new Vector2(0,0);
         productionUpgradesScroll.normalizedPosition = new Vector2(0,0);
 
         UpdateUpgradeUI("click");
@@ -78,25 +85,27 @@ public class UpgradeManager : MonoBehaviour
             case "click":
                 if(UpgradeID == -1)
                 {
-                    for(int i = 0; i < clickUpgrades.Count; i++) UpdateUI(clickUpgrades, data.clickUpgradeLevel, clickUpgradeNames, i);
+                    for(int i = 0; i < specialUpgrades.Count; i++) UpdateUI(specialUpgrades, data.clickUpgradeLevel, clickUpgradeNames, clickUpgradePerks, i);
                 }
-                else UpdateUI(clickUpgrades, data.clickUpgradeLevel, clickUpgradeNames, UpgradeID);
+
+                else UpdateUI(specialUpgrades, data.clickUpgradeLevel, clickUpgradeNames, clickUpgradePerks, UpgradeID);
                 break;
 
             case "production":
                 if(UpgradeID == -1)
                 {
-                    for(int i = 0; i < productionUpgrades.Count; i++) UpdateUI(productionUpgrades, data.productionUpgradeLevel, productionUpgradeNames, i);
+                    for(int i = 0; i < productionUpgrades.Count; i++) UpdateUI(productionUpgrades, data.productionUpgradeLevel, productionUpgradeNames, productionUpgradePerks, i);
                 }
-                else UpdateUI(productionUpgrades, data.productionUpgradeLevel, productionUpgradeNames, UpgradeID);
+                else UpdateUI(productionUpgrades, data.productionUpgradeLevel, productionUpgradeNames, productionUpgradePerks, UpgradeID);
                 break;
         }
 
-        void UpdateUI(List<Upgrades> upgrades,List<int> upgradeLevels, string[] upgradeNames, int ID)
+        void UpdateUI(List<Upgrades> upgrades,List<int> upgradeLevels, string[] upgradeNames, string[] upgradePerks, int ID)
         {
-            upgrades[ID].LevelText.text = "Lvl: " + upgradeLevels[ID].ToString();
-            upgrades[ID].CostText.text = $"Cost: {UpgradeCost(type, ID):F0} Pixl!";
+            upgrades[ID].LevelText.text = "Lvl: " + upgradeLevels[ID].ToString();          
+            upgrades[ID].CostText.text = $"{UpgradeCost(type, ID):F0}";
             upgrades[ID].NameText.text = upgradeNames[ID];
+            upgrades[ID].PerkText.text = upgradePerks[ID];
         }
         
     }
@@ -114,7 +123,7 @@ public class UpgradeManager : MonoBehaviour
 
             case "production":
                 return productionUpgradesBaseCost[UpgradeID] 
-                * BigDouble.Pow(productionUpgradesCostMult[UpgradeID], (BigDouble)data.productionUpgradeLevel[UpgradeID]);
+                * BigDouble.Pow(1.3, (BigDouble)data.productionUpgradeLevel[UpgradeID]);
             break;
         }
 
@@ -138,6 +147,7 @@ public class UpgradeManager : MonoBehaviour
         {
             if(data.pixlAmount >= UpgradeCost(type, UpgradeID))
             {
+                
                 data.pixlAmount -= UpgradeCost(type, UpgradeID);
                 upgradeLevels[UpgradeID] += 1;
             }

@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviour
     private const string dataFileName = "Pixl_Clickr";
     void Start()
     {
+
         data = SaveSystem.SaveExists(dataFileName) 
             ? SaveSystem.LoadData<Data>(dataFileName) : new Data();
         
@@ -42,7 +43,7 @@ public class GameManager : MonoBehaviour
 
         pixlAmountText.text = ((long)data.pixlAmount).ToString("n0") + " Pixl!";
         pixlClickPowerText.text = "+" + ClickPower() + " Pixl";
-        pixlPerSecondText.text = $"{PixlPerSecond():F0} per sec";
+        pixlPerSecondText.text = $"{PixlPerSecond():F2} per sec";
 
         SaveTime += Time.deltaTime * (1 / Time.timeScale);
         if(SaveTime >= 0.5f)
@@ -56,10 +57,10 @@ public class GameManager : MonoBehaviour
     public BigDouble ClickPower()
     {
         BigDouble total = 1;
-        for(int i = 0; i < data.clickUpgradeLevel.Count; i++)
-        {
-            total += UpgradeManager.instance.clickUpgradesBasePower[i] * data.clickUpgradeLevel[i];
-        }
+        if(data.clickUpgradeLevel[1] == 0)
+            return total;
+        total += UpgradeManager.instance.clickUpgradesBasePower[1] * data.clickUpgradeLevel[1];
+        total -= 1;
         return total;
     }
 
@@ -106,8 +107,9 @@ public class GameManager : MonoBehaviour
 
         else
         {
+            productionScrollBar.value = 1f;
             productionShop.SetActive(true);
-            productionScrollBar.value = 1;
+            
         }
     }
 }

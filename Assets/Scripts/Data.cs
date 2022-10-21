@@ -16,7 +16,7 @@ public class Data
     public Data()
     {
         pixlAmount = 0;
-        clickUpgradeLevel = new int[4].ToList();
-        productionUpgradeLevel = new int[4].ToList();
+        clickUpgradeLevel = new int[2].ToList();
+        productionUpgradeLevel = new int[9].ToList();
     }
 }
