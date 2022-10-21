@@ -13,9 +13,6 @@ public class GameManager : MonoBehaviour
 
     public Data data;
 
-    [Header("Value Variables")]
-    [SerializeField] private float pixlAmount = 0;
-
     [Header("UI References")]
     [SerializeField] private TMP_Text pixlAmountText;
     [SerializeField] private TMP_Text pixlClickPowerText;
@@ -32,7 +29,9 @@ public class GameManager : MonoBehaviour
     {
         data = SaveSystem.SaveExists(dataFileName) 
             ? SaveSystem.LoadData<Data>(dataFileName) : new Data();
+        
         UpgradeManager.instance.StartUpdateManager();
+        OfflineManager.instance.LoadOfflineProduction();
     }
 
     public float SaveTime;
@@ -40,12 +39,13 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         data.pixlAmount += PixlPerSecond() * Time.deltaTime;
-        pixlAmountText.text = $"{data.pixlAmount:F0} Pixl!";
+
+        pixlAmountText.text = ((long)data.pixlAmount).ToString("n0") + " Pixl!";
         pixlClickPowerText.text = "+" + ClickPower() + " Pixl";
         pixlPerSecondText.text = $"{PixlPerSecond():F0} per sec";
 
         SaveTime += Time.deltaTime * (1 / Time.timeScale);
-        if(SaveTime >= 3)
+        if(SaveTime >= 0.5f)
         {
             SaveSystem.SaveData(data, dataFileName);
             SaveTime = 0;

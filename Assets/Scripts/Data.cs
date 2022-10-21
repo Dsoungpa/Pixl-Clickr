@@ -11,6 +11,7 @@ public class Data
     public BigDouble pixlAmount;
     public List<int> clickUpgradeLevel;
     public List<int> productionUpgradeLevel;
+    public bool offlineProgressCheck = false;
 
     public Data()
     {

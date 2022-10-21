@@ -35,6 +35,9 @@ public class SaveSystem : MonoBehaviour
                 formatter.Serialize(memoryStream, data);
                 string dataToSave = Convert.ToBase64String(memoryStream.ToArray());
                 writer.WriteLine(dataToSave);
+
+                PlayerPrefs.SetString("OfflineTime", DateTime.Now.ToBinary().ToString());
+                //if(!data.offlineProgressCheck) data.offlineProgressCheck = true;
             }
         }
     }
