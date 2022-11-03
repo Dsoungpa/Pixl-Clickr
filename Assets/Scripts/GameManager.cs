@@ -9,7 +9,7 @@ using TMPro;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
-    public Leaderboard leaderboard;
+
     private void Awake() => instance = this;
 
     public Data data;
@@ -34,6 +34,8 @@ public class GameManager : MonoBehaviour
         
         UpgradeManager.instance.StartUpdateManager();
         OfflineManager.instance.LoadOfflineProduction();
+
+        //StartCoroutine(AddHighScore());
     }
 
     public float SaveTime;
@@ -72,7 +74,6 @@ public class GameManager : MonoBehaviour
         {
             total += UpgradeManager.instance.productionUpgradesBasePower[i] * data.productionUpgradeLevel[i];
         }
-        StartCoroutine(leaderboard.SubmitScoreRoutine((int)total));
         return total;
     }
 
@@ -114,4 +115,6 @@ public class GameManager : MonoBehaviour
             
         }
     }
+
+    
 }

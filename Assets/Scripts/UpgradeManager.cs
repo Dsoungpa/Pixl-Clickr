@@ -8,6 +8,7 @@ using BreakInfinity;
 public class UpgradeManager : MonoBehaviour
 {
     public static UpgradeManager instance;
+    public Leaderboard leaderboard;
     private void Awake() => instance = this;
 
     public List<Upgrades> specialUpgrades;
@@ -177,6 +178,8 @@ public class UpgradeManager : MonoBehaviour
                 data.pixlAmount -= UpgradeCost(type, UpgradeID);
                 upgradeLevels[UpgradeID] += 1;
 
+                StartCoroutine(AddHighScore());
+
             }
 
             else
@@ -211,6 +214,12 @@ public class UpgradeManager : MonoBehaviour
             }
         }
         
+    }
+
+    IEnumerator AddHighScore()
+    {
+        //yield return new WaitForSeconds(10f);
+        yield return leaderboard.SubmitScoreRoutine((int)GameManager.instance.PixlPerSecond());
     }
 }
 
