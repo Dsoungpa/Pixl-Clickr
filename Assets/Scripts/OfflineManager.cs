@@ -30,13 +30,19 @@ public class OfflineManager : MonoBehaviour
             // This can be used to change the ratio amount earned offline;
             var offlineTime = rawTime;
 
-            offlinePopUp.gameObject.SetActive(true);
-            TimeSpan timer = TimeSpan.FromSeconds(rawTime);
-            timeAwayText.text = $"You were away for\n<color=#00FFFF>{timer:dd\\:hh\\:mm\\:ss}</color>";
-
             BigDouble pixlGains = (GameManager.instance.PixlPerSecond() * offlineTime) * GetOfflineRatio();
-            data.pixlAmount += pixlGains;
-            pixlGainsText.text = $"You earned \n+{pixlGains:F0} Pixl!";
+            
+
+            if(pixlGains > 0){
+                offlinePopUp.gameObject.SetActive(true);
+                TimeSpan timer = TimeSpan.FromSeconds(rawTime);
+                timeAwayText.text = $"You were away for \n<color=#00FFFF>{timer:dd\\:hh\\:mm\\:ss}</color>";
+
+                data.pixlAmount += pixlGains;
+                pixlGainsText.text = $"You earned <color=#800000>+{pixlGains:F0} Pixl </color>while you were offline!";
+            }
+            
+
         // }
     }
 

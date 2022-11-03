@@ -167,7 +167,7 @@ GameObject:
   - component: {fileID: 5409556389412851021}
   - component: {fileID: 5409556389412851016}
   m_Layer: 5
-  m_Name: ProductionUpgrade
+  m_Name: ClickUpgradewIcons
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -283,7 +283,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 5409556389412851016}
         m_TargetAssemblyTypeName: Upgrades, Assembly-CSharp
-        m_MethodName: BuyProductionUpgrade
+        m_MethodName: BuyClickUpgrade
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

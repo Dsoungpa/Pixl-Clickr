@@ -26,7 +26,22 @@ public class UpgradeManager : MonoBehaviour
     public string[] productionUpgradeNames;
     public string[] clickUpgradePerks;
     public string[] productionUpgradePerks;
-    
+
+    public Image[] specialUpgradeIcons;
+    public Image[] productionUpgradeIcons;
+
+    // Image Prefabs
+    public Image offlinePrefab;
+    public Image clickPrefab;
+    public Image pixlPetPrefab;
+    public Image bronzeGoatPrefab;
+    public Image sappySealPrefab;
+    public Image silverGoatPrefab;
+    public Image goldGoatPrefab;
+    public Image eggIncubatorPrefab;
+    public Image pixelPalacePrefab;
+    public Image foundersPassPrefab;
+    public Image oneOfOnePrefab;
 
     public BigDouble[] clickUpgradesBaseCost;
     public BigDouble[] clickUpgradesCostMult;
@@ -36,18 +51,26 @@ public class UpgradeManager : MonoBehaviour
     public BigDouble[] productionUpgradesCostMult;
     public BigDouble[] productionUpgradesBasePower;
 
+    private void Update() 
+    {
+        CanAfford(specialUpgrades, "click");
+        CanAfford(productionUpgrades, "production");
+    }
+
     public void StartUpdateManager()
     {
         //Methods.UpgradeCheck(GameManager.instance.data.clickUpgradeLevel, 2);
 
         clickUpgradeNames = new []{"Offline Progress", "Power Click"};
         clickUpgradePerks = new []{"+5%", "2x Per Click"};
+        specialUpgradeIcons = new []{offlinePrefab, clickPrefab};
         clickUpgradesBaseCost = new BigDouble[] {10000, 5};
         clickUpgradesCostMult = new BigDouble[] {2.5, 2.5};
         clickUpgradesBasePower = new BigDouble[] {5, 2};
         
-        productionUpgradeNames = new []{"Sappy Seal", "Bronze Goat", "Pixl Pet", "Silver Goat", "Gold Goat", "Egg Incubator", "Pixel Palace", "Diety Pet", "1 of 1"};
+        productionUpgradeNames = new []{"Pixl Pet", "Bronze Goat", "Sappy Seal", "Silver Goat", "Gold Goat", "Egg Incubator", "Pixel Palace", "Founders Pass", "1 of 1"};
         productionUpgradePerks = new []{"PPS   +0.1", "PPS   +0.3", "PPS   +1", "PPS   +3", "PPS   +6", "PPS   +20", "PPS   +40", "PPS   +70", "PPS   +300"};
+        productionUpgradeIcons = new []{pixlPetPrefab, bronzeGoatPrefab, sappySealPrefab, silverGoatPrefab, goldGoatPrefab, eggIncubatorPrefab, pixelPalacePrefab, foundersPassPrefab, oneOfOnePrefab};
         productionUpgradesBaseCost = new BigDouble[] {3, 100, 1000, 10000, 50000, 200000, 500000, 1000000, 5000000};
         //productionUpgradesCostMult = new BigDouble[] {1.5, 1.75, 2, 3};
         productionUpgradesBasePower = new BigDouble[] {0.1, 0.3, 1, 3, 6, 20, 40, 70, 300};
@@ -85,27 +108,30 @@ public class UpgradeManager : MonoBehaviour
             case "click":
                 if(UpgradeID == -1)
                 {
-                    for(int i = 0; i < specialUpgrades.Count; i++) UpdateUI(specialUpgrades, data.clickUpgradeLevel, clickUpgradeNames, clickUpgradePerks, i);
+                    for(int i = 0; i < specialUpgrades.Count; i++) UpdateUI(specialUpgrades, data.clickUpgradeLevel, clickUpgradeNames, clickUpgradePerks, i, specialUpgradeIcons);
                 }
 
-                else UpdateUI(specialUpgrades, data.clickUpgradeLevel, clickUpgradeNames, clickUpgradePerks, UpgradeID);
+                else UpdateUI(specialUpgrades, data.clickUpgradeLevel, clickUpgradeNames, clickUpgradePerks, UpgradeID, specialUpgradeIcons);
                 break;
 
             case "production":
                 if(UpgradeID == -1)
                 {
-                    for(int i = 0; i < productionUpgrades.Count; i++) UpdateUI(productionUpgrades, data.productionUpgradeLevel, productionUpgradeNames, productionUpgradePerks, i);
+                    for(int i = 0; i < productionUpgrades.Count; i++) UpdateUI(productionUpgrades, data.productionUpgradeLevel, productionUpgradeNames, productionUpgradePerks, i, productionUpgradeIcons);
                 }
-                else UpdateUI(productionUpgrades, data.productionUpgradeLevel, productionUpgradeNames, productionUpgradePerks, UpgradeID);
+                else UpdateUI(productionUpgrades, data.productionUpgradeLevel, productionUpgradeNames, productionUpgradePerks, UpgradeID, productionUpgradeIcons);
                 break;
         }
 
-        void UpdateUI(List<Upgrades> upgrades,List<int> upgradeLevels, string[] upgradeNames, string[] upgradePerks, int ID)
+        void UpdateUI(List<Upgrades> upgrades,List<int> upgradeLevels, string[] upgradeNames, string[] upgradePerks, int ID, Image[] upgradeIcons = null)
         {
             upgrades[ID].LevelText.text = "Lvl: " + upgradeLevels[ID].ToString();          
-            upgrades[ID].CostText.text = $"{UpgradeCost(type, ID):F0}";
+            upgrades[ID].CostText.text = ((long)UpgradeCost(type, ID)).ToString("n0");
             upgrades[ID].NameText.text = upgradeNames[ID];
             upgrades[ID].PerkText.text = upgradePerks[ID];
+            upgrades[ID].UpgradeIcon.sprite = upgradeIcons[ID].sprite;
+
+            
         }
         
     }
@@ -150,9 +176,41 @@ public class UpgradeManager : MonoBehaviour
                 
                 data.pixlAmount -= UpgradeCost(type, UpgradeID);
                 upgradeLevels[UpgradeID] += 1;
+
+            }
+
+            else
+            {
+                for(int i = 0; i < specialUpgrades.Count; i++)
+                {
+                    specialUpgrades[i].UpgradeButton.color = new Color32(140, 140, 140, 255);
+                }
+
+                for(int j = 0; j < productionUpgrades.Count; j++)
+                {
+                    productionUpgrades[j].UpgradeButton.color = new Color32(140, 140, 140, 255);
+                }
             }
             UpdateUpgradeUI(type, UpgradeID);
+        }  
+        
+    }
+
+    public void CanAfford(List<Upgrades> upgradesList, string type)
+    {
+        for(int i = 0; i < upgradesList.Count; i++)
+        {
+            if(GameManager.instance.data.pixlAmount >= UpgradeCost(type, i))
+            {
+                upgradesList[i].UpgradeButton.color = new Color32(255, 255, 255, 255);
+            }
+
+            else
+            {
+                upgradesList[i].UpgradeButton.color = new Color32(140, 140, 140, 255);
+            }
         }
+        
     }
 }
 

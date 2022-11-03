@@ -9,6 +9,7 @@ using TMPro;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
+    public Leaderboard leaderboard;
     private void Awake() => instance = this;
 
     public Data data;
@@ -71,6 +72,7 @@ public class GameManager : MonoBehaviour
         {
             total += UpgradeManager.instance.productionUpgradesBasePower[i] * data.productionUpgradeLevel[i];
         }
+        StartCoroutine(leaderboard.SubmitScoreRoutine((int)total));
         return total;
     }
 
@@ -78,8 +80,8 @@ public class GameManager : MonoBehaviour
     {
         var sequence = DOTween.Sequence();
 
-        sequence.Insert(0, pixlImage.transform.DOScale(new Vector2(0.5f, 0.5f), 0.05f));
-        sequence.Insert(0, pixlImage.transform.DOScale(new Vector2(2f, 2f), 0.25f));
+        sequence.Insert(0, pixlImage.transform.DOScale(new Vector2(1f, 1f), 0.05f));
+        sequence.Insert(0, pixlImage.transform.DOScale(new Vector2(4f, 4f), 0.25f));
         
         data.pixlAmount += ClickPower();
     }
