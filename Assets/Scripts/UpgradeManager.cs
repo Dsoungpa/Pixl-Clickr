@@ -216,10 +216,11 @@ public class UpgradeManager : MonoBehaviour
         
     }
 
-    IEnumerator AddHighScore()
+    public IEnumerator AddHighScore()
     {
         //yield return new WaitForSeconds(10f);
         yield return leaderboard.SubmitScoreRoutine((int)GameManager.instance.PixlPerSecond());
+        yield return leaderboard.FetchTopHighScoresRoutine();
     }
 }
 
