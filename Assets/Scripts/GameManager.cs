@@ -19,8 +19,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TMP_Text pixlClickPowerText;
     [SerializeField] private TMP_Text pixlPerSecondText;
     [SerializeField] private Image pixlImage;
-    [SerializeField] private GameObject clickShop;
-    [SerializeField] private GameObject productionShop;
+    [SerializeField] private GameObject shopUI;
+    [SerializeField] private GameObject leaderboardUI;
     [SerializeField] private Scrollbar clickScrollBar;
     [SerializeField] private Scrollbar productionScrollBar;
 
@@ -87,32 +87,17 @@ public class GameManager : MonoBehaviour
         data.pixlAmount += ClickPower();
     }
 
-    public void ClickShopController()
+    public void ShopController()
     {
-        if(clickShop.activeSelf)
+        if(shopUI.activeSelf)
         {
-            clickShop.SetActive(false);
+            shopUI.SetActive(false);
         } 
 
         else
         {
-            clickShop.SetActive(true);
-            clickScrollBar.value = 1;
-        }
-    }
-
-    public void ProductionShopController()
-    {
-        if(productionShop.activeSelf)
-        {
-            productionShop.SetActive(false);
-        } 
-
-        else
-        {
-            productionScrollBar.value = 1f;
-            productionShop.SetActive(true);
-            
+            leaderboardUI.SetActive(false);
+            shopUI.SetActive(true);
         }
     }
 

@@ -11,7 +11,9 @@ public class Leaderboard : MonoBehaviour
     public TMP_Text playerScores;
     public Leaderboard leaderboardPlayerPrefab;
     public GameObject leaderboardUI;
+    public GameObject shopUI;
     public Transform leaderboardPanel;
+
 
     // Start is called before the first frame update
     void Start()
@@ -46,7 +48,7 @@ public class Leaderboard : MonoBehaviour
         {
             if(response.success)
             {
-                clearLeaderboardPanel();
+                ClearLeaderboardPanel();
                 string tempPlayerNames = "";
                 //string tempPlayerScores = "PPS\n";
 
@@ -93,12 +95,13 @@ public class Leaderboard : MonoBehaviour
 
         else
         {
+            shopUI.SetActive(false);
             leaderboardUI.SetActive(true);
             
         }
     }
 
-    public void clearLeaderboardPanel()
+    public void ClearLeaderboardPanel()
     {
         int children = leaderboardPanel.childCount;
         //print(children);
