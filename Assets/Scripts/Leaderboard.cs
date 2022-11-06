@@ -46,6 +46,7 @@ public class Leaderboard : MonoBehaviour
         {
             if(response.success)
             {
+                clearLeaderboardPanel();
                 string tempPlayerNames = "";
                 //string tempPlayerScores = "PPS\n";
 
@@ -94,6 +95,18 @@ public class Leaderboard : MonoBehaviour
         {
             leaderboardUI.SetActive(true);
             
+        }
+    }
+
+    public void clearLeaderboardPanel()
+    {
+        int children = leaderboardPanel.childCount;
+        //print(children);
+        for(int i = 1; i < children; i++)
+        {
+            // print(i);
+            // print(leaderboardPanel.GetChild(i));
+            Destroy(leaderboardPanel.GetChild(i).gameObject);
         }
     }
 }
