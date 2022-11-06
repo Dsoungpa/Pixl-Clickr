@@ -9,7 +9,9 @@ public class Leaderboard : MonoBehaviour
     int leaderboardID = 8413;
     public TMP_Text playerNames;
     public TMP_Text playerScores;
-    public GameObject leaderboardPanel;
+    public Leaderboard leaderboardPlayerPrefab;
+    public GameObject leaderboardUI;
+    public Transform leaderboardPanel;
 
     // Start is called before the first frame update
     void Start()
@@ -44,28 +46,32 @@ public class Leaderboard : MonoBehaviour
         {
             if(response.success)
             {
-                string tempPlayerNames = "Names\n";
-                string tempPlayerScores = "PPS\n";
+                string tempPlayerNames = "";
+                //string tempPlayerScores = "PPS\n";
 
                 LootLockerLeaderboardMember[] members = response.items;
 
                 for(int i = 0; i < members.Length; i++)
                 {
-                    tempPlayerNames += members[i].rank + ". ";
                     if(members[i].player.name != "")
                     {
-                        tempPlayerNames += members[i].player.name;
+                        tempPlayerNames = members[i].rank + ". " + members[i].player.name;
                     }
                     else
                     {
-                        tempPlayerNames += members[i].player.id;
+                        tempPlayerNames = members[i].player.id.ToString();
                     }
-                    tempPlayerScores += members[i].score + "\n";
-                    tempPlayerNames += "\n";
+                    Leaderboard player = Instantiate(leaderboardPlayerPrefab, leaderboardPanel);
+                    player.playerNames.text = tempPlayerNames;
+                    player.playerScores.text = members[i].score.ToString() + " PPS";
+
+                    // tempPlayerScores += members[i].score + "\n";
+                    // tempPlayerNames += "\n";
                 }
                 done = true;
-                playerNames.text = tempPlayerNames;
-                playerScores.text = tempPlayerScores;
+                
+                // playerNames.text = tempPlayerNames;
+                // playerScores.text = tempPlayerScores;
             }
             else
             {
@@ -79,14 +85,14 @@ public class Leaderboard : MonoBehaviour
 
     public void LeaderboardController()
     {
-        if(leaderboardPanel.activeSelf)
+        if(leaderboardUI.activeSelf)
         {
-            leaderboardPanel.SetActive(false);
+            leaderboardUI.SetActive(false);
         } 
 
         else
         {
-            leaderboardPanel.SetActive(true);
+            leaderboardUI.SetActive(true);
             
         }
     }
