@@ -21,6 +21,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Image pixlImage;
     [SerializeField] private GameObject shopUI;
     [SerializeField] private GameObject leaderboardUI;
+    [SerializeField] private GameObject clickTextPrefab;
+    [SerializeField] private GameObject clickButton;
     [SerializeField] private Scrollbar clickScrollBar;
     [SerializeField] private Scrollbar productionScrollBar;
 
@@ -83,6 +85,17 @@ public class GameManager : MonoBehaviour
 
         sequence.Insert(0, pixlImage.transform.DOScale(new Vector2(1f, 1f), 0.05f));
         sequence.Insert(0, pixlImage.transform.DOScale(new Vector2(4f, 4f), 0.25f));
+
+        GameObject clickText = Instantiate(clickTextPrefab, clickButton.transform);
+        
+        clickText.transform.position += new Vector3(Random.Range(-20, 100), Random.Range(-60, 25), 0);
+        clickText.GetComponent<TMP_Text>().text = "+" + ClickPower();
+
+        sequence.Insert(0, clickText.transform.DOMove(new Vector2(clickText.transform.position.x, clickText.transform.position.y + 1000), 5f));
+        sequence.Insert(0, clickText.GetComponent<TextMeshProUGUI>().DOFade(0f, 1.5f));
+        
+
+
         
         data.pixlAmount += ClickPower();
     }
