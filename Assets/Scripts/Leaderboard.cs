@@ -6,6 +6,8 @@ using TMPro;
 
 public class Leaderboard : MonoBehaviour
 {
+    public static Leaderboard instance;
+
     int leaderboardID = 8413;
     public TMP_Text playerNames;
     public TMP_Text playerScores;
@@ -13,6 +15,7 @@ public class Leaderboard : MonoBehaviour
     public GameObject leaderboardUI;
     public GameObject shopUI;
     public Transform leaderboardPanel;
+    public Vector2 leaderboardUITransform;
 
 
     // Start is called before the first frame update
@@ -62,7 +65,7 @@ public class Leaderboard : MonoBehaviour
                     }
                     else
                     {
-                        tempPlayerNames = members[i].player.id.ToString();
+                        tempPlayerNames = members[i].rank + ". " + members[i].player.id.ToString();
                     }
                     Leaderboard player = Instantiate(leaderboardPlayerPrefab, leaderboardPanel);
                     player.playerNames.text = tempPlayerNames;
@@ -86,20 +89,7 @@ public class Leaderboard : MonoBehaviour
         yield return new WaitWhile(() => done == false);
     }
 
-    public void LeaderboardController()
-    {
-        if(leaderboardUI.activeSelf)
-        {
-            leaderboardUI.SetActive(false);
-        } 
-
-        else
-        {
-            shopUI.SetActive(false);
-            leaderboardUI.SetActive(true);
-            
-        }
-    }
+    
 
     public void ClearLeaderboardPanel()
     {

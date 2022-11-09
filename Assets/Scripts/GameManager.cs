@@ -24,7 +24,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject clickTextPrefab;
     [SerializeField] private GameObject clickButton;
     [SerializeField] private Scrollbar clickScrollBar;
-    [SerializeField] private Scrollbar productionScrollBar;
+    [SerializeField] private Scrollbar shopScrollBar;
+    [SerializeField] private Vector2 shopUITransform;
+    //[SerializeField] private BigDouble clickPowertotal = 1;
 
 
     private const string dataFileName = "Pixl_Clickr";
@@ -47,8 +49,8 @@ public class GameManager : MonoBehaviour
         data.pixlAmount += PixlPerSecond() * Time.deltaTime;
 
         pixlAmountText.text = ((long)data.pixlAmount).ToString("n0") + " Pixl!";
-        pixlClickPowerText.text = "+" + ClickPower() + " Pixl";
-        pixlPerSecondText.text = $"{PixlPerSecond():F2} per sec";
+        pixlClickPowerText.text = "+" + ((long)ClickPower()).ToString("n0") + " Pixl";
+        pixlPerSecondText.text = ((long)PixlPerSecond()).ToString("n0") + " per sec";
 
         SaveTime += Time.deltaTime * (1 / Time.timeScale);
         if(SaveTime >= 0.5f)
@@ -61,12 +63,16 @@ public class GameManager : MonoBehaviour
 
     public BigDouble ClickPower()
     {
-        BigDouble total = 1;
+        BigDouble clickPowertotal = 1;
         if(data.clickUpgradeLevel[1] == 0)
-            return total;
-        total += UpgradeManager.instance.clickUpgradesBasePower[1] * data.clickUpgradeLevel[1];
-        total -= 1;
-        return total;
+            return clickPowertotal;
+
+
+        print((float)UpgradeManager.instance.clickUpgradesBasePower[1]);
+        print((float)data.clickUpgradeLevel[1]);
+        clickPowertotal += Mathf.Pow((float)UpgradeManager.instance.clickUpgradesBasePower[1], (float)data.clickUpgradeLevel[1]);
+        clickPowertotal -= 1;
+        return clickPowertotal;
     }
 
     public BigDouble PixlPerSecond()
@@ -89,29 +95,15 @@ public class GameManager : MonoBehaviour
         GameObject clickText = Instantiate(clickTextPrefab, clickButton.transform);
         
         clickText.transform.position += new Vector3(Random.Range(-20, 100), Random.Range(-60, 25), 0);
-        clickText.GetComponent<TMP_Text>().text = "+" + ClickPower();
+        clickText.GetComponent<TMP_Text>().text = "+" + ((long)ClickPower()).ToString("n0");
 
         sequence.Insert(0, clickText.transform.DOMove(new Vector2(clickText.transform.position.x, clickText.transform.position.y + 1000), 5f));
-        sequence.Insert(0, clickText.GetComponent<TextMeshProUGUI>().DOFade(0f, 1.5f));
+        sequence.Insert(0, clickText.GetComponent<TextMeshProUGUI>().DOFade(0f, 0.8f));
         
 
 
         
         data.pixlAmount += ClickPower();
-    }
-
-    public void ShopController()
-    {
-        if(shopUI.activeSelf)
-        {
-            shopUI.SetActive(false);
-        } 
-
-        else
-        {
-            leaderboardUI.SetActive(false);
-            shopUI.SetActive(true);
-        }
     }
 
     
